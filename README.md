@@ -1,40 +1,42 @@
-# VINSight 🚗
+# VINSight
 
 > **Know your car's true worth — instantly. Zero API keys. Zero login. Zero cost.**
 
-VINSight is a full-stack vehicle valuation app. Enter any 17-digit VIN and get a real market estimate, 12-month depreciation projection, live NHTSA recall check, and a hold/sell strategy — powered entirely by free public APIs with no paid services.
+Live at **https://vin-sight.onrender.com/**
+
+VINSight is a full-stack vehicle valuation web app. Enter any 17-digit VIN and get a real market estimate, 12-month depreciation projection, live NHTSA recall check, and a hold/sell recommendation — powered entirely by free public APIs with no paid services.
 
 ---
 
-## ✨ Features
+## Features
 
 | | Feature | Details |
 |---|---|---|
-| 🔍 | **VIN Decode** | Real data via NHTSA VPIC — make, model, year, trim, engine, drivetrain |
-| 💰 | **Market Valuation** | Brand-specific depreciation + mileage curve + condition rating + regional pricing |
-| 📊 | **Value Range** | Conservative / mid-market / optimistic estimate band |
-| 🛡️ | **Recall Check** | Live NHTSA lookup — flags open safety campaigns with details |
-| 📈 | **12-Month Projection** | Forward depreciation curve charted month by month |
-| 🧠 | **Hold/Sell Strategy** | Smart contextual advice based on mileage, condition, age and market |
-| 🗃️ | **My Garage** | Save evaluations to browser localStorage — no account needed |
-| 📋 | **Share** | One-click copy of your full report to clipboard |
+| | **VIN Decode** | Real data via NHTSA VPIC — make, model, year, trim, engine, drivetrain |
+| | **Market Valuation** | Brand-specific depreciation + mileage curve + condition rating + regional pricing |
+| | **Value Range** | Conservative / mid-market / optimistic estimate band |
+| | **Recall Check** | Live NHTSA lookup — flags open safety campaigns with component and remedy details |
+| | **12-Month Projection** | Forward depreciation curve charted month by month |
+| | **Hold/Sell Strategy** | Rule-based contextual advice based on mileage, condition, age, and market |
+| | **My Garage** | Save evaluations to browser localStorage — no account needed |
+| | **Share** | One-click copy of your full report to clipboard |
 
 ---
 
-## 🆓 Truly Free — No Keys, No Login
+## Truly Free — No Keys, No Login
 
 | Service | Cost | Key needed? |
 |---|---|---|
-| [NHTSA VPIC](https://vpic.nhtsa.dot.gov/api/) — VIN decode | Free | ❌ None |
-| [NHTSA Recalls API](https://api.nhtsa.gov) — Safety data | Free | ❌ None |
-| Hosting on [Render](https://render.com) free tier | Free | ✅ GitHub account |
+| [NHTSA VPIC](https://vpic.nhtsa.dot.gov/api/) — VIN decode | Free | None |
+| [NHTSA Recalls API](https://api.nhtsa.gov) — Safety data | Free | None |
+| Hosting on [Render](https://render.com) free tier | Free | GitHub account |
 
-The entire app runs with **zero API keys, zero accounts, zero config**.  
+The entire app runs with **zero API keys, zero accounts, zero config**.
 Garage saves to `localStorage` — your data never leaves your browser.
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 ```
 Frontend    React 19 · TypeScript · Vite 6 · Tailwind CSS 4
@@ -42,16 +44,17 @@ Charts      Chart.js + react-chartjs-2
 Icons       Lucide React
 Backend     Express.js · Node.js · tsx
 Data        NHTSA VPIC API · NHTSA Recalls API (both 100% free, no key)
-Storage     Browser localStorage (no backend, no database)
+Storage     Browser localStorage (no backend DB)
+Deploy      Render (render.yaml included)
 ```
 
 ---
 
-## 🚀 Run Locally
+## Run Locally
 
 ```bash
 # 1. Clone
-git clone https://github.com/YOUR_USERNAME/vin-sight.git
+git clone https://github.com/guna29/vin-sight.git
 cd vin-sight
 
 # 2. Install
@@ -63,19 +66,17 @@ npm run dev
 
 Open **http://localhost:3000** — no `.env`, no config, no signup.
 
-Try any real 17-digit VIN to test it out.
-
 ---
 
-## 🔧 How Valuation Works
+## How Valuation Works
 
 ```
-Base MSRP  (from NHTSA, or estimated by vehicle body class)
+Base MSRP  (from NHTSA, or estimated by body class)
   × Age factor       brand-specific rate compounded per year
   × Mileage factor   smooth curve: +4% (< 10K mi) → −48% (> 160K mi)
   × Condition factor 1–5 scale: −40% (Poor) to +8% (Excellent)
   × Region factor    CA +6% · NY +4% · TX −3% · AZ −4% · etc.
-  ─────────────────────────────────────────────────────────
+  ─────────────────────────────────────────────────────────────────
   = Mid-market value  ±12% for conservative / optimistic band
 ```
 
@@ -84,35 +85,37 @@ Base MSRP  (from NHTSA, or estimated by vehicle body class)
 | Brand | Rate/yr | Brand | Rate/yr |
 |---|---|---|---|
 | Porsche | 10% | Ferrari / Lamborghini | 5–6% |
-| Toyota | 12% | Honda / Lexus | 13% |
-| KIA / Hyundai | 14% | Ford / Tesla | 15% |
+| Toyota | 12% | Honda / Lexus / Subaru | 13% |
+| KIA / Hyundai / RAM | 14% | Ford / Tesla / VW | 15% |
 | BMW / Mercedes | 18% | Audi | 19% |
 | Jaguar | 22% | Default | 15% |
 
+The hold/sell strategy is generated by rule-based logic in `lib/evaluate.ts` — no LLM or external AI service involved.
+
 ---
 
-## ☁️ Deploy Free on Render
+## Deploy Free on Render
 
 1. Fork/push this repo to GitHub
 2. Go to [render.com](https://render.com) → **New → Web Service**
 3. Connect your repo — Render reads `render.yaml` automatically
 4. Hit **Deploy**
 
-Your app goes live at `https://vin-sight.onrender.com`.
-
-> Render free tier sleeps after 15 min of inactivity. First cold-start ~30s. Perfect for a personal project.
+> Render free tier sleeps after 15 min of inactivity. First cold-start ~30s.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 vin-sight/
 ├── src/
-│   ├── App.tsx          # Full React UI — form, results, garage
+│   ├── App.tsx          # React UI — form, results, garage
 │   ├── main.tsx         # React entry point
 │   └── index.css        # Tailwind imports
-├── server.ts            # Express — VIN decode, valuation, recalls
+├── lib/
+│   └── evaluate.ts      # Shared valuation logic (depreciation formula, strategy)
+├── server.ts            # Express — VIN decode, evaluation, recalls
 ├── render.yaml          # One-click Render deployment
 ├── vite.config.ts       # Vite build config
 └── index.html           # HTML shell
@@ -120,7 +123,7 @@ vin-sight/
 
 ---
 
-## 📜 License
+## License
 
 MIT — use it, fork it, ship it.
 
